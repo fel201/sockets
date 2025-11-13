@@ -2,17 +2,24 @@
 #include <windows.h>
 #include <ws2tcpip.h>
 #include <stdio.h>
-int main() {
-    struct sockaddr_in sa;
-    struct sockaddr_in6 sa6;
-    char ipv4_buffer[INET_ADDRSTRLEN];
-    inet_pton(AF_INET, "10.12.110.57", &(sa.sin_addr));
-    inet_pton(AF_INET6, "2001:db8:63b3:1::3490", &(sa6.sin6_addr));
-    printf("%u\n", htonl(sa.sin_addr.s_addr));
-    printf("0X%X\n", sa6.sin6_addr.s6_addr);
 
-    inet_ntop(AF_INET, &(sa.sin_addr), ipv4_buffer, INET_ADDRSTRLEN);
-    printf("%s\n", ipv4_buffer);
+int main(void) {
+    int status;
+    struct addrinfo hints;
+    struct addrinfo *servinfo;
+
+    memset(&hints, 0, sizeof(hints));
+
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_flags = AI_PASSIVE;
+
+    if ((status = getaddrinfo(NULL, "3490", &hints, &servinfo)) != 0) {
+        fprintf(stderr, "gai error: %s\n", gai_strerror(status));
+        exit(1);
+    }
+
+    printf("%i, %i, %i\n", servinfo->ai_flags, servinfo->ai_family, servinfo->ai_protocol);
+    freeaddrinfo(servinfo);
     return 0;
 }
-    
