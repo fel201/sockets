@@ -45,7 +45,6 @@ int main(int argc, char *argv[])
         char *ipver;
         struct sockaddr_in *ipv4;
         struct sockaddr_in6 *ipv6;
-        
         // get the pointer to the address itself,
         // different fields in IPv4 and IPv6:
         if (p->ai_family == AF_INET) { // IPv4
